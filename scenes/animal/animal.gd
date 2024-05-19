@@ -1,5 +1,8 @@
 extends RigidBody2D
 
+@onready var animalDragEngine = preload("res://global/animal_drag.gd").new()
+
+
 @onready var debug_label = $DebugLabel
 
 enum ANIMAL_STATE { READY, DRAG, RELEASE }
@@ -18,6 +21,7 @@ var _dragged_vector: Vector2 = Vector2.ZERO
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	animalDragEngine.hello()
 	_start = position
 	pass # Replace with function body.
 
@@ -50,24 +54,12 @@ func has_user_released() -> bool:
 func get_dragged_vector(gmp: Vector2) -> Vector2:
 	return gmp - _drag_start
 
-func drag_within_limits() -> void:
-	# don't let x go outside the limits
-	_dragged_vector.x = clampf(
-		_dragged_vector.x,
-		DRAG_LIM_MIN.x,
-		DRAG_LIM_MAX.x)
-	_dragged_vector.y = clampf(
-		_dragged_vector.y, 
-		DRAG_LIM_MIN.y, 
-		DRAG_LIM_MAX.y)
-	position = _start + _dragged_vector
-
 func update_drag() -> void:
 	if has_user_released() == true:
 		return
 	var gmp = get_global_mouse_position()
 	_dragged_vector = get_dragged_vector(gmp)
-	drag_within_limits()
+	position = animalDragEngine.drag_within_limits(_dragged_vector, _start)
 
 func update(delta: float) -> void:
 	match _state:
