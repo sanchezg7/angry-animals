@@ -16,4 +16,5 @@ texture = ExtResource("1_26af3")
 position = Vector2(155, 263)
 
 [node name="Water" parent="." instance=ExtResource("2_1yxxu")]
+z_index = 1
 position = Vector2(-13, 575)
