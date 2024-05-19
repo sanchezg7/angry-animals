@@ -38,7 +38,10 @@ shape = SubResource("CircleShape2D_bcdwn")
 
 [node name="Bird2" type="RigidBody2D" parent="."]
 position = Vector2(291, 64)
+input_pickable = true
 physics_material_override = SubResource("PhysicsMaterial_6drwc")
+gravity_scale = 10.0
+freeze = true
 script = ExtResource("2_cx4db")
 
 [node name="Label" type="Label" parent="Bird2"]
@@ -122,4 +125,5 @@ texture = ExtResource("1_om3hm")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pivot"]
 shape = SubResource("CircleShape2D_t5mvx")
 
+[connection signal="input_event" from="Bird2" to="Bird2" method="_on_input_event"]
 [connection signal="timeout" from="Bird2/Timer" to="Bird2" method="_on_timer_timeout"]

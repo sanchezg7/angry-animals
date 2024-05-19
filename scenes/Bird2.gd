@@ -14,3 +14,8 @@ func _process(delta):
 
 func _on_timer_timeout():
 	freeze = false
+
+
+func _on_input_event(viewport, event, shape_idx):
+	if event.button_mask == 1:
+		position = get_global_mouse_position();
