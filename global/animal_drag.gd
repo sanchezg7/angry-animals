@@ -4,7 +4,6 @@ extends RigidBody2D
 const DRAG_LIM_MAX: Vector2 = Vector2(0, 60) # top left point
 const DRAG_LIM_MIN: Vector2 = Vector2(-60, 0) # bottom right point
 
-var _start: Vector2 = Vector2.ZERO
 # Vector of where the drag starts when the user clicks
 var _drag_start: Vector2 = Vector2.ZERO
 func set_drag_start(value: Vector2) -> void:
