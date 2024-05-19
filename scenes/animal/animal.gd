@@ -4,18 +4,20 @@ extends RigidBody2D
 
 @onready var debug_label = $DebugLabel
 @onready var stretch_sound = $StretchSound
+@onready var arrow = $Arrow
 
 enum ANIMAL_STATE { READY, DRAG, RELEASE }
 var _state: ANIMAL_STATE = ANIMAL_STATE.READY
 
 const ACTION_DRAG = "drag"
 
+# the initial position of the animal
 var _start: Vector2 = Vector2.ZERO
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	arrow.hide()
 	_start = position
-	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
@@ -29,14 +31,16 @@ func die() -> void:
 	queue_free()
 
 func set_release_state() -> void:
+	arrow.hide()
 	freeze = false
 	_state = ANIMAL_STATE.RELEASE
 	
 func set_drag_state() -> void:
+	arrow.show()
 	_state = ANIMAL_STATE.DRAG
 	anDrag.set_drag_start(get_global_mouse_position())
 
-func has_user_released() -> bool:
+func has_user_released_and_update_state() -> bool:
 	if _state == ANIMAL_STATE.DRAG:
 		if Input.is_action_just_released(ACTION_DRAG) == true:
 			set_release_state()
@@ -47,10 +51,11 @@ func update(delta: float) -> void:
 	var gmp = get_global_mouse_position()
 	match _state:
 		ANIMAL_STATE.DRAG:
-			if has_user_released() == true:
+			if has_user_released_and_update_state() == true:
 				return
 			position = anDrag.get_dragged_position(gmp, _start)
 			play_stretch_sound()
+			scale_arrow()
 
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	AnimalManager.on_animal_died.emit()
@@ -60,7 +65,12 @@ func _on_input_event(viewport, event: InputEvent, shape_idx):
 	var isDragPressed = event.is_action_pressed(ACTION_DRAG)
 	if _state == ANIMAL_STATE.READY and isDragPressed:
 		set_drag_state()
-		
+
+
+func scale_arrow() -> void:
+	arrow.rotation = (_start - position).angle()
+	
+
 func play_stretch_sound() -> void:
 	var hasUserDragged: bool = (anDrag.get_last_dragged_vector() - anDrag.get_dragged_vector()).length() > 0
 	if(hasUserDragged):

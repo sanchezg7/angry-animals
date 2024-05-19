@@ -32,7 +32,7 @@ offset_bottom = -40.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Debug"
 
-[node name="Sprite2D2" type="Sprite2D" parent="."]
+[node name="Arrow" type="Sprite2D" parent="."]
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("3_ruc7d")
 offset = Vector2(150, 0)
