@@ -14,6 +14,10 @@ func set_drag_start(value: Vector2) -> void:
 var _dragged_vector: Vector2 = Vector2.ZERO
 func get_dragged_vector() -> Vector2:
 	return _dragged_vector
+
+var _last_dragged_vector: Vector2 = Vector2.ZERO
+func get_last_dragged_vector() -> Vector2:
+	return _last_dragged_vector
 	
 func get_position_dragged_within_limits(_dragged_vector: Vector2, _start: Vector2) -> Vector2:
 	# don't let x go outside the limits
@@ -32,5 +36,6 @@ func calculate_dragged_vector(gmp: Vector2, _drag_start: Vector2) -> Vector2:
 
 func get_dragged_position(gmp: Vector2, _start: Vector2) -> Vector2:
 	var raw_dragged_vector = calculate_dragged_vector(gmp, _drag_start)
+	_last_dragged_vector = _dragged_vector
 	_dragged_vector = get_position_dragged_within_limits(raw_dragged_vector, _start)
 	return _dragged_vector
