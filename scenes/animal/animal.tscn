@@ -23,10 +23,10 @@ position = Vector2(0.5, -4.76837e-07)
 scale = Vector2(2.15, 2.1)
 
 [node name="DebugLabel" type="Label" parent="."]
-offset_left = -24.0
-offset_top = -44.0
-offset_right = 26.0
-offset_bottom = -21.0
+offset_left = -25.0
+offset_top = -63.0
+offset_right = 25.0
+offset_bottom = -40.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Debug"
 
