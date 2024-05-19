@@ -4,6 +4,7 @@ extends RigidBody2D
 
 @onready var debug_label = $DebugLabel
 @onready var stretch_sound = $StretchSound
+@onready var launch_sound = $LaunchSound
 @onready var arrow = $Arrow
 
 enum ANIMAL_STATE { READY, DRAG, RELEASE }
@@ -14,26 +15,38 @@ const ACTION_DRAG = "drag"
 # the initial position of the animal
 var _start: Vector2 = Vector2.ZERO
 
+const IMPULSE_MULT: float = 20.0
+const IMPULSE_MAX: float = 1200.0
+
+var _arrow_scale_x: float = 0.0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	_arrow_scale_x = arrow.scale.x
 	arrow.hide()
 	_start = position
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	update(delta)
-	# This will give a list of keys, since enums are a dict
+	
 	var _dragged_vector = anDrag.get_dragged_vector()
+	# This will give a list of keys, since enums are a dict
 	debug_label.text = "%s\n" % ANIMAL_STATE.keys()[_state]
 	debug_label.text += "%.1f,%.1f" % [_dragged_vector.x, _dragged_vector.y]
 
 func die() -> void:
 	queue_free()
 
+func get_impulse() -> Vector2:
+	return anDrag.get_dragged_vector() * -1 * IMPULSE_MULT
+
 func set_release_state() -> void:
 	arrow.hide()
 	freeze = false
 	_state = ANIMAL_STATE.RELEASE
+	apply_central_impulse(get_impulse())
+	launch_sound.play()
 	
 func set_drag_state() -> void:
 	arrow.show()
@@ -68,6 +81,10 @@ func _on_input_event(viewport, event: InputEvent, shape_idx):
 
 
 func scale_arrow() -> void:
+	var imp_len = get_impulse().length()
+	var perc = imp_len / IMPULSE_MAX
+	arrow.scale.x = (_arrow_scale_x * perc) + _arrow_scale_x
+	
 	arrow.rotation = (_start - position).angle()
 	
 

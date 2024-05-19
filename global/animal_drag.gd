@@ -5,7 +5,7 @@ const DRAG_LIM_MAX: Vector2 = Vector2(0, 60) # top left point
 const DRAG_LIM_MIN: Vector2 = Vector2(-60, 0) # bottom right point
 
 var _start: Vector2 = Vector2.ZERO
-# Where the drag starts when the user clicks
+# Vector of where the drag starts when the user clicks
 var _drag_start: Vector2 = Vector2.ZERO
 func set_drag_start(value: Vector2) -> void:
 	_drag_start = value
@@ -14,6 +14,9 @@ func set_drag_start(value: Vector2) -> void:
 var _dragged_vector: Vector2 = Vector2.ZERO
 func get_dragged_vector() -> Vector2:
 	return _dragged_vector
+func set_dragged_vector(value: Vector2) -> void:
+	_last_dragged_vector = _dragged_vector
+	_dragged_vector = value
 
 var _last_dragged_vector: Vector2 = Vector2.ZERO
 func get_last_dragged_vector() -> Vector2:
@@ -35,7 +38,7 @@ func calculate_dragged_vector(gmp: Vector2, _drag_start: Vector2) -> Vector2:
 	return gmp - _drag_start
 
 func get_dragged_position(gmp: Vector2, _start: Vector2) -> Vector2:
-	var raw_dragged_vector = calculate_dragged_vector(gmp, _drag_start)
-	_last_dragged_vector = _dragged_vector
-	_dragged_vector = get_position_dragged_within_limits(raw_dragged_vector, _start)
-	return _dragged_vector
+	var dragged_vector = calculate_dragged_vector(gmp, _drag_start)
+	set_dragged_vector(dragged_vector)
+	var final_dragged_vector = get_position_dragged_within_limits(_dragged_vector, _start)
+	return final_dragged_vector
