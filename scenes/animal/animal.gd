@@ -54,17 +54,17 @@ func has_user_released() -> bool:
 func get_dragged_vector(gmp: Vector2) -> Vector2:
 	return gmp - _drag_start
 
-func update_drag() -> void:
-	if has_user_released() == true:
-		return
+func get_dragged_position() -> Vector2:
 	var gmp = get_global_mouse_position()
 	_dragged_vector = get_dragged_vector(gmp)
-	position = animalDragEngine.drag_within_limits(_dragged_vector, _start)
+	return animalDragEngine.drag_within_limits(_dragged_vector, _start)
 
 func update(delta: float) -> void:
 	match _state:
 		ANIMAL_STATE.DRAG:
-			update_drag()
+			if has_user_released() == true:
+				return
+			position = get_dragged_position()
 
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	AnimalManager.on_animal_died.emit()
